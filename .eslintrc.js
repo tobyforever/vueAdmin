@@ -46,5 +46,6 @@ module.exports = {
     'import/prefer-default-export': 0,
     'no-shadow': process.env.NODE_ENV === 'production' ? 1 : 0,
     'yoda': 0,
+    'quote-props':0,
   }
 }
