@@ -1,14 +1,13 @@
 import Vue from 'vue'
-import App from './App'
+import Vuex from 'vuex'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
-import VueRouter from 'vue-router'
-import store from './vuex/store'
-import Vuex from 'vuex'
-
 //页面顶部进度条
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import VueRouter from 'vue-router'
+import App from './App'
+import store from './vuex/store'
 
 import Login from './components/Login'
 import Home from './components/Home'
@@ -75,7 +74,7 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-router.afterEach(transition => {
+router.afterEach((transition) => {
   NProgress.done();
 });
 

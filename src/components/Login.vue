@@ -42,16 +42,15 @@
         this.$refs.ruleForm2.resetFields();
       },
       handleSubmit2(ev) {
-        var _this = this;
+        const that = this;
         this.$refs.ruleForm2.validate((valid) => {
-
           if (valid) {
             //_this.$router.push('/table');
-            _this.$router.replace('/table');
-          } else {
-            console.log('error submit!!');
-            return false;
+            that.$router.replace('/table');
+            return true;
           }
+          console.log('error submit!!');
+          return false;
         });
       }
     }
