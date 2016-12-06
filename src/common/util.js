@@ -6,18 +6,18 @@ function padding(s, len) {
     s = '0' + s;
   }
   return s;
-};
+}
 
 export default {
   getQueryStringByName: function (name) {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
     var r = window.location.search.substr(1).match(reg);
     var context = "";
     if (r != null)
       context = r[2];
     reg = null;
     r = null;
-    return context == null || context == "" || context == "undefined" ? "" : context;
+    return context == null || context === '' || context == 'undefined' ? '' : context;
   },
   formatDate: {
 
@@ -47,7 +47,7 @@ export default {
       var matchs1 = pattern.match(SIGN_REGEXP);
       var matchs2 = dateString.match(/(\d)+/g);
       if (matchs1.length == matchs2.length) {
-        var _date = new Date(1970, 0, 1);
+        var date = new Date(1970, 0, 1);
         for (var i = 0; i < matchs1.length; i++) {
           var _int = parseInt(matchs2[i]);
           var sign = matchs1[i];
