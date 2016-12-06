@@ -18,6 +18,7 @@ import Page3 from './components/nav1/Page3'
 import Page4 from './components/nav2/Page4'
 import Page5 from './components/nav2/Page5'
 import Page6 from './components/nav3/Page6'
+import HBFlightList from './components/hbflight/HBFlightList'
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
@@ -30,6 +31,16 @@ const routes = [
     hidden: true//不显示在导航中
   },
   //{ path: '/main', component: Main },
+  {
+    path: '/',
+    component: Home,
+    name: '航班候补',
+    iconCls: 'fa fa-line-chart',
+    leaf: true,
+    children: [
+      {path: '/hblist', component: HBFlightList, name: '航班候补列表'},
+    ]
+  },
   {
     path: '/',
     component: Home,
@@ -62,7 +73,7 @@ const routes = [
     children: [
       {path: '/page6', component: Page6, name: '导航三'}
     ]
-  }
+  },
 ]
 
 const router = new VueRouter({
@@ -88,6 +99,6 @@ new Vue({
   //render: h => h(Login)
 }).$mount('#app')
 
-router.replace('/login')
-
+//TODO：检查用户登录状态，根据需要弹出登录窗口
+//router.replace('/login')
 

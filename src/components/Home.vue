@@ -7,7 +7,7 @@
       <el-col :span="4">
         <el-tooltip class="item tip-logout" effect="dark" content="退出" placement="bottom" style="padding:0px;">
           <!--<i class="logout" v-on:click="logout"></i>-->
-          <i class="fa fa-sign-out" aria-hidden="true" v-on:click="logout"></i>
+          <i class="fa fa-sign-out" aria-hidden="true" @click="logout"></i>
         </el-tooltip>
       </el-col>
     </el-col>
