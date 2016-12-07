@@ -11,7 +11,8 @@
                           style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button>查询</el-button>
+          <el-button >查询</el-button>
+          <el-button >导出</el-button>
         </el-form-item>
         <!--<el-form-item>-->
         <!--<el-button @click="handleAdd">新增</el-button>-->

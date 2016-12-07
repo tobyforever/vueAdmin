@@ -72,6 +72,7 @@ const routes = [
     component: Home,
     name: '航班候补',
     iconCls: 'fa fa-line-chart',
+    leaf: true,
     children: [
       {path: '/hblist', component: HBFlightList, name: '航班候补列表'},
     ]
