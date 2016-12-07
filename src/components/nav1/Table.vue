@@ -83,9 +83,10 @@
 
 <script type="text/babel">
   import NProgress from 'nprogress'
-  import util from '../../common/util'
+  import util from '../../scripts/common/util'
 
   export default {
+    name:'page-table',
     data() {
       return {
         formInline: {

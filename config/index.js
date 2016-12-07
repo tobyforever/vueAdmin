@@ -24,18 +24,10 @@ module.exports = {
     proxyTable: {
       // proxy all requests starting with /api to jsonplaceholder
       '/api': {
-        target: 'http://112.74.64.137:1818',
+        target: 'http://localhost:8080/hbpd',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
-        }
-      },
-      '/v2api': {
-        // target: 'http://u5zfg.free.natapp.cc',
-        target: 'http://192.168.0.101',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/v2api': ''
         }
       },
     },

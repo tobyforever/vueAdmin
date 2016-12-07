@@ -32,16 +32,7 @@ const routes = [
   },
   //{ path: '/main', component: Main },
   {
-    path: '/',
-    component: Home,
-    name: '航班候补',
-    iconCls: 'fa fa-line-chart',
-    leaf: true,
-    children: [
-      {path: '/hblist', component: HBFlightList, name: '航班候补列表'},
-    ]
-  },
-  {
+    hidden: true,
     path: '/',
     component: Home,
     name: '导航一',
@@ -54,6 +45,7 @@ const routes = [
     ]
   },
   {
+    hidden: true,
     path: '/',
     component: Home,
     name: '导航二',
@@ -64,6 +56,7 @@ const routes = [
     ]
   },
   {
+    hidden: true,
     path: '/',
     component: Home,
     name: '',
@@ -72,6 +65,15 @@ const routes = [
     leaf: true,
     children: [
       {path: '/page6', component: Page6, name: '导航三'}
+    ]
+  },
+  {
+    path: '/',
+    component: Home,
+    name: '航班候补',
+    iconCls: 'fa fa-line-chart',
+    children: [
+      {path: '/hblist', component: HBFlightList, name: '航班候补列表'},
     ]
   },
 ]

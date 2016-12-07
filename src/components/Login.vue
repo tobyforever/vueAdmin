@@ -10,13 +10,17 @@
     </el-form-item>
     <el-checkbox v-model="checked" checked style="margin:0px 0px 35px 0px;">记住密码</el-checkbox>
     <el-form-item style="width:100%;">
-      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2">登录</el-button>
+      <el-button type="primary" style="width:100%;" @click.native.prevent="login">登录</el-button>
       <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
     </el-form-item>
   </el-form>
 </template>
 
 <script type="text/babel">
+  import axios from 'axios';
+  import qs from 'qs';
+  import API from '../scripts/common/api';
+
   export default {
     data() {
       return {
@@ -40,6 +44,24 @@
     methods: {
       handleReset2() {
         this.$refs.ruleForm2.resetFields();
+      },
+      login() {
+        console.log('111')
+        const postData = {
+          App: 'imall',
+          Service: 'queryUser',
+          Version: '1',
+          loginName: this.ruleForm2.account,
+          password: this.ruleForm2.checkPass,
+        }
+        axios.post(API.user_login, qs.stringify({
+          username:this.ruleForm2.account,
+          password:this.ruleForm2.checkPass,
+          postData:JSON.stringify(postData),
+        })).then((res)=>{
+          debugger
+          console.dir(res)
+        })
       },
       handleSubmit2(ev) {
         const that = this;

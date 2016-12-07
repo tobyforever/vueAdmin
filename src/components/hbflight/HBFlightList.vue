@@ -4,36 +4,49 @@
     <el-col :span="24" class="toolbar">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item>
-          <el-input v-model="formInline.user" placeholder="姓名"></el-input>
+          <el-input v-model="formInline.orgin" placeholder="始发地"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-date-picker type="date" placeholder="出发日期" v-model="formInline.flightdate"
+                          style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item>
           <el-button>查询</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button @click="handleAdd">新增</el-button>
-        </el-form-item>
+        <!--<el-form-item>-->
+        <!--<el-button @click="handleAdd">新增</el-button>-->
+        <!--</el-form-item>-->
       </el-form>
     </el-col>
 
     <!--列表-->
     <template>
-      <el-table :data="tableData" highlight-current-row v-loading="listLoading" style="width: 100%;">
-        <el-table-column type="index" width="50">
+      <el-table border :data="flightData.flights" highlight-current-row v-loading="listLoading" style="width: 100%;">
+        <el-table-column type="index" width="80" fixed>
         </el-table-column>
-        <el-table-column prop="name" label="姓名" width="180" sortable>
+        <el-table-column prop="flightNo" label="航班号" width="100">
         </el-table-column>
-        <el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>
+        <el-table-column prop="flightDate" label="时间" width="100" :formatter="formatDate">
         </el-table-column>
-        <el-table-column prop="age" label="年龄" width="100" sortable>
+        <el-table-column prop="name" label="姓名" width="100">
         </el-table-column>
-        <el-table-column prop="birth" label="生日" width="180" sortable>
+        <el-table-column prop="origin" label="出发" width="80">
         </el-table-column>
-        <el-table-column prop="addr" label="地址" sortable>
+        <el-table-column prop="destination" label="到达" width="80">
         </el-table-column>
-        <el-table-column inline-template :context="_self" label="操作" width="100">
+        <el-table-column prop="carrier" label="航司" width="80">
+        </el-table-column>
+        <el-table-column prop="plane" label="机型" width="80">
+        </el-table-column>
+        <el-table-column prop="seats" label="余座" width="100">
+        </el-table-column>
+        <el-table-column prop="seq" label="候补序号" width="100">
+        </el-table-column>
+        <el-table-column inline-template :context="_self" label="操作" width="100" fixed="right">
 					<span>
-					<el-button type="text" size="small" @click="handleEdit(row)">编辑</el-button>
-					<el-button type="text" size="small" @click="handleDel(row)">删除</el-button>
+					<!--<el-button type="text" size="small" @click="handleEdit(row)">编辑</el-button>-->
+            <!--<el-button type="text" size="small" @click="handleDel(row)">删除</el-button>-->
+            <el-button type="text" size="small" @click="confirmHouBu(row)">候补成功确认</el-button>
 				</span>
         </el-table-column>
       </el-table>
@@ -83,13 +96,16 @@
 
 <script type="text/babel">
   import NProgress from 'nprogress'
-  import util from '../../common/util'
+  import moment from 'moment'
+  import util from '../../scripts/common/util'
 
   export default {
+    name: 'hbflight-list',
     data() {
       return {
         formInline: {
-          user: ''
+          origin: '',
+          flightdate: '',
         },
         pickerOptions0: {
           disabledDate(time) {
@@ -117,63 +133,332 @@
             {required: true, message: '请输入姓名', trigger: 'blur'}
           ]
         },
-        tableData: [{
-          id: 1000,
-          name: 'lanqy1',
-          sex: 1,
-          age: 20,
-          birth: '1996-03-02',
-          addr: '广东广州天河体育中心'
-        }, {
-          id: 1001,
-          name: 'lanqy2',
-          sex: 1,
-          age: 20,
-          birth: '1996-03-02',
-          addr: '广东广州天河体育中心'
-        }, {
-          id: 1002,
-          name: 'lanqy3',
-          sex: 0,
-          age: 20,
-          birth: '1996-03-02',
-          addr: '广东广州天河体育中心'
-        }, {
-          id: 1003,
-          name: 'lanqy4',
-          sex: 1,
-          age: 20,
-          birth: '1996-03-02',
-          addr: '广东广州天河体育中心'
-        }, {
-          id: 1004,
-          name: 'lanqy5',
-          sex: 1,
-          age: 20,
-          birth: '1996-03-02',
-          addr: '广东广州天河体育中心'
-        }, {
-          id: 1005,
-          name: 'lanqy6',
-          sex: 1,
-          age: 20,
-          birth: '1996-03-02',
-          addr: '广东广州天河体育中心'
-        }, {
-          id: 1006,
-          name: 'lanqy7',
-          sex: 1,
-          age: 20,
-          birth: '1996-03-02',
-          addr: '广东广州天河体育中心'
-        }, {
-          id: 1007,
-          name: 'lanqy8',
-          sex: 1,
-          age: 20,
-          birth: '1996-03-02',
-          addr: '广东广州天河体育中心'
-        }],
+        flightData: {
+          'hbflag': 1,
+          'orig': 'PEK',
+          'fdate': '2016-12-5',
+          'passengers': [{'name': 'yige', 'sex': 1, 'idType': 1, 'idnumber': 'wang2_222', 'mobile': '139xxx2'}],
+          'flights': [{
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'CA1355',
+            'flightDate': '1480918500000',
+            'plane': '32A',
+            'carrier': 'CA',
+            'seats': 0,
+            'seq': 2
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'CZ6366',
+            'flightDate': '1480921500000',
+            'plane': '321',
+            'carrier': 'CZ',
+            'seats': 10,
+            'seq': 2
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'ZH1355',
+            'flightDate': '1480918500000',
+            'plane': '32A',
+            'carrier': 'ZH',
+            'seats': 0,
+            'seq': 2
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'CA1355',
+            'flightDate': '1480918500000',
+            'plane': '32A',
+            'carrier': 'CA',
+            'seats': 0,
+            'seq': 4
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'CZ6158',
+            'flightDate': '1480941600000',
+            'plane': '321',
+            'carrier': 'CZ',
+            'seats': 10,
+            'seq': 15
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'CZ6158',
+            'flightDate': '1480941600000',
+            'plane': '321',
+            'carrier': 'CZ',
+            'seats': 10,
+            'seq': 14
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'MF4018',
+            'flightDate': '1480921500000',
+            'plane': '321',
+            'carrier': 'MF',
+            'seats': 10,
+            'seq': 2
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'MF1837',
+            'flightDate': '1480941600000',
+            'plane': '321',
+            'carrier': 'MF',
+            'seats': 10,
+            'seq': 15
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'HU7282',
+            'flightDate': '1480943400000',
+            'plane': '331',
+            'carrier': 'HU',
+            'seats': 10,
+            'seq': 15
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'MF1837',
+            'flightDate': '1480941600000',
+            'plane': '321',
+            'carrier': 'MF',
+            'seats': 10,
+            'seq': 2
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'ZH1355',
+            'flightDate': '1480918500000',
+            'plane': '32A',
+            'carrier': 'ZH',
+            'seats': 0,
+            'seq': 4
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'MF1020',
+            'flightDate': '1480915200000',
+            'plane': '321',
+            'carrier': 'MF',
+            'seats': 10,
+            'seq': 4
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'HU7282',
+            'flightDate': '1480943400000',
+            'plane': '331',
+            'carrier': 'HU',
+            'seats': 10,
+            'seq': 14
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'CZ6366',
+            'flightDate': '1480921500000',
+            'plane': '321',
+            'carrier': 'CZ',
+            'seats': 10,
+            'seq': 4
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'HU7782',
+            'flightDate': '1480926000000',
+            'plane': '787',
+            'carrier': 'HU',
+            'seats': 10,
+            'seq': 4
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'HU7776',
+            'flightDate': '1480935900000',
+            'plane': '738',
+            'carrier': 'HU',
+            'seats': 0,
+            'seq': 14
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'HU7776',
+            'flightDate': '1480935900000',
+            'plane': '738',
+            'carrier': 'HU',
+            'seats': 0,
+            'seq': 2
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'HU7182',
+            'flightDate': '1480913700000',
+            'plane': '738',
+            'carrier': 'HU',
+            'seats': 10,
+            'seq': 4
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'CZ6158',
+            'flightDate': '1480941600000',
+            'plane': '321',
+            'carrier': 'CZ',
+            'seats': 10,
+            'seq': 2
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'HU7282',
+            'flightDate': '1480943400000',
+            'plane': '331',
+            'carrier': 'HU',
+            'seats': 10,
+            'seq': 2
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'MF4018',
+            'flightDate': '1480921500000',
+            'plane': '321',
+            'carrier': 'MF',
+            'seats': 10,
+            'seq': 4
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'MF1020',
+            'flightDate': '1480915200000',
+            'plane': '321',
+            'carrier': 'MF',
+            'seats': 10,
+            'seq': 2
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'HU7782',
+            'flightDate': '1480926000000',
+            'plane': '787',
+            'carrier': 'HU',
+            'seats': 10,
+            'seq': 2
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'MF1837',
+            'flightDate': '1480941600000',
+            'plane': '321',
+            'carrier': 'MF',
+            'seats': 10,
+            'seq': 14
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'CZ3120',
+            'flightDate': '1480915200000',
+            'plane': '321',
+            'carrier': 'CZ',
+            'seats': 10,
+            'seq': 2
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'HU7182',
+            'flightDate': '1480913700000',
+            'plane': '738',
+            'carrier': 'HU',
+            'seats': 10,
+            'seq': 2
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'HU7776',
+            'flightDate': '1480935900000',
+            'plane': '738',
+            'carrier': 'HU',
+            'seats': 0,
+            'seq': 15
+          }, {
+            'origin': 'PEK',
+            'destination': 'HAK',
+            'flightNo': 'CZ3120',
+            'flightDate': '1480915200000',
+            'plane': '321',
+            'carrier': 'CZ',
+            'seats': 10,
+            'seq': 4
+          }],
+          'tickets': [{'pnr': 'ORG188889', 'ticketNo': '1123456'}],
+          'Id': 0,
+          'App': 'imall',
+          'Service': 'queryHbFlightList',
+          'Version': '1',
+          'Sign': null,
+          'ReplyId': 'http-8080-1',
+          'Result': null,
+          'Key': null,
+          'TrackInfo': null
+        },
+//        tableData: [{
+//          id: 1000,
+//          name: 'lanqy1',
+//          sex: 1,
+//          age: 20,
+//          birth: '1996-03-02',
+//          addr: '广东广州天河体育中心'
+//        }, {
+//          id: 1001,
+//          name: 'lanqy2',
+//          sex: 1,
+//          age: 20,
+//          birth: '1996-03-02',
+//          addr: '广东广州天河体育中心'
+//        }, {
+//          id: 1002,
+//          name: 'lanqy3',
+//          sex: 0,
+//          age: 20,
+//          birth: '1996-03-02',
+//          addr: '广东广州天河体育中心'
+//        }, {
+//          id: 1003,
+//          name: 'lanqy4',
+//          sex: 1,
+//          age: 20,
+//          birth: '1996-03-02',
+//          addr: '广东广州天河体育中心'
+//        }, {
+//          id: 1004,
+//          name: 'lanqy5',
+//          sex: 1,
+//          age: 20,
+//          birth: '1996-03-02',
+//          addr: '广东广州天河体育中心'
+//        }, {
+//          id: 1005,
+//          name: 'lanqy6',
+//          sex: 1,
+//          age: 20,
+//          birth: '1996-03-02',
+//          addr: '广东广州天河体育中心'
+//        }, {
+//          id: 1006,
+//          name: 'lanqy7',
+//          sex: 1,
+//          age: 20,
+//          birth: '1996-03-02',
+//          addr: '广东广州天河体育中心'
+//        }, {
+//          id: 1007,
+//          name: 'lanqy8',
+//          sex: 1,
+//          age: 20,
+//          birth: '1996-03-02',
+//          addr: '广东广州天河体育中心'
+//        }],
         listLoading: false
       }
     },
@@ -186,6 +471,14 @@
           return '女';
         }
         return '未知';
+      },
+      formatDate(row, column) {
+        const date = (+row.flightDate) / 1000;
+        return moment.unix(date).format('HH:mm');
+      },
+      confirmHouBu(row) {
+        console.log('候补成功确认...')
+        console.dir(row)
       },
       //删除记录
       handleDel(row) {
